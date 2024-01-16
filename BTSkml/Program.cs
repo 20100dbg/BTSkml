@@ -128,6 +128,7 @@ namespace BTSkml
             }
         }
 
+
         static string FixDecSeparator(string s)
         {
             string currentSep = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
@@ -137,6 +138,7 @@ namespace BTSkml
             return s;
         }
 
+
         static Coord GetCible(Coord capteur, float azm, float distance)
         {
             double cibleY = Math.Asin(Math.Sin(capteur.Y * Math.PI / 180) * Math.Cos(distance / 6371) + Math.Cos(capteur.Y * Math.PI / 180) * Math.Sin(distance / 6371) * Math.Cos(azm * Math.PI / 180)) * 180 / Math.PI;
@@ -145,5 +147,45 @@ namespace BTSkml
             return new Coord { X = cibleX, Y = cibleY };
         }
 
+
+        static List<PointReco> readReco(string filename)
+        {
+            List<PointReco> listPoint = new List<PointReco>();
+
+            using (StreamReader sr = new StreamReader(filename))
+            {
+                string line;
+                bool firstLine = true;
+
+                while ((line = sr.ReadLine()) != null)
+                {
+                    if (firstLine)
+                    {
+                        firstLine = false;
+                        continue;
+                    }
+
+                    string[] tabLine = line.Split(new char[] { ';' });
+
+                    listPoint.Add(new PointReco
+                    {
+                        MCC = int.Parse(tabLine[2]),
+                        MNC = int.Parse(tabLine[3]),
+                        LAC = int.Parse(tabLine[4]),
+                        CI = int.Parse(tabLine[5]),
+                        BSIC = int.Parse(tabLine[6]),
+                        ARFCN = int.Parse(tabLine[7]),
+                        FRQ = float.Parse(FixDecSeparator(tabLine[8])),
+                        Coord = new Coord
+                        {
+                            Y = double.Parse(FixDecSeparator(tabLine[11])),
+                            X = double.Parse(FixDecSeparator(tabLine[12]))
+                        }
+                    });
+                }
+
+                return listPoint;
+            }
+        }
     }
 }

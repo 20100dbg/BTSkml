@@ -27,4 +27,16 @@ namespace BTSkml
         public string linecolor { get; set; }
         public string areacolor { get; set; }
     }
+
+    class PointReco
+    {
+        public int MCC { get; set; }
+        public int MNC { get; set; }
+        public int LAC { get; set; }
+        public int CI { get; set; }
+        public int BSIC { get; set; }
+        public int ARFCN { get; set; }
+        public float FRQ { get; set; }
+        public Coord Coord { get; set; }
+    }
 }
